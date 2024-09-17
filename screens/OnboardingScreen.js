@@ -1,6 +1,5 @@
 import React, { useContext } from 'react';
 import { View, Text, StyleSheet, Dimensions, Image, TouchableOpacity } from 'react-native';
-// import Onboarding from '../components/Onboarding/Onboarding';
 import Onboarding from 'react-native-onboarding-swiper';
 import LottieView from 'lottie-react-native';
 import { useNavigation } from '@react-navigation/native';
@@ -10,11 +9,11 @@ import { OnboardingContext } from '../context/OnboardingContext';
 
 export default function OnboardingScreen() {
     const navigation = useNavigation();
-    const { markOnboardingAsSeen } = useContext(OnboardingContext);  // Usar el contexto
+    const { markOnboardingAsSeen } = useContext(OnboardingContext);
 
     const handleDone = () => {
-        markOnboardingAsSeen();  // Marcar que el Onboarding fue visto
-        navigation.navigate('Home');  // Navegar a la pantalla principal
+        markOnboardingAsSeen();
+        navigation.navigate('Home');
     }
 
     const doneButton = ({ ...props }) => (
@@ -39,8 +38,6 @@ export default function OnboardingScreen() {
         <View style={styles.container}>
             <Onboarding
                 containerStyles={{ paddingHorizontal: 15 }}
-                // skipLabel={"Omitir"}
-                // nextLabel={"Siguiente"}
                 bottomBarHighlight={false}
                 DoneButtonComponent={doneButton}
                 SkipButtonComponent={skipButton}

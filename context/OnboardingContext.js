@@ -1,13 +1,11 @@
-// OnboardingContext.js
 import React, { createContext, useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const OnboardingContext = createContext();
 
 export const OnboardingProvider = ({ children }) => {
-    const [hasSeenOnboarding, setHasSeenOnboarding] = useState(null); // Inicialmente null para manejar la carga inicial
+    const [hasSeenOnboarding, setHasSeenOnboarding] = useState(null);
 
-    // Función para guardar que el usuario ha visto el Onboarding en AsyncStorage
     const markOnboardingAsSeen = async () => {
         try {
             await AsyncStorage.setItem('hasSeenOnboarding', 'true');
@@ -18,7 +16,6 @@ export const OnboardingProvider = ({ children }) => {
         }
     };
 
-    // Función para verificar en AsyncStorage si el usuario ya ha visto el Onboarding
     const checkIfOnboardingSeen = async () => {
         try {
             const value = await AsyncStorage.getItem('hasSeenOnboarding');
@@ -33,7 +30,6 @@ export const OnboardingProvider = ({ children }) => {
         }
     };
 
-    // Efecto que se ejecuta al iniciar la aplicación para verificar el estado del Onboarding
     useEffect(() => {
         checkIfOnboardingSeen();
     }, []);

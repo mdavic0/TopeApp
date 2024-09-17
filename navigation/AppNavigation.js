@@ -1,20 +1,27 @@
 import React, { useContext } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import { OnboardingContext } from '../context/OnboardingContext';  // Importa el contexto
+import { OnboardingContext } from '../context/OnboardingContext';
 import OnboardingScreen from '../screens/OnboardingScreen';
 import HomeScreen from '../screens/HomeScreen';
-import { View, ActivityIndicator } from 'react-native';  // Para el spinner de carga
+import { View, ActivityIndicator, Image, StyleSheet, Dimensions } from 'react-native';
+const {width, height} = Dimensions.get('window');
 
 const Stack = createStackNavigator();
 
 export default function MainNavigator() {
     const { hasSeenOnboarding } = useContext(OnboardingContext);
 
-    // Mostrar un spinner mientras se carga el estado de AsyncStorage
     if (hasSeenOnboarding === null) {
         console.log('Cargando estado de Onboarding... ( TODAVIA ES NULL)');
+    
         return (
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                <Image 
+                    source={require('../assets/images/logo.png')} 
+                    style={[styles.logo, { tintColor: '' }]}
+                    resizeMode="contain"
+
+                />
                 <ActivityIndicator size="large" color="red" />
             </View>
         );
@@ -38,3 +45,10 @@ export default function MainNavigator() {
         </>        
     );
 }
+
+const styles = StyleSheet.create({
+    logo: {
+        width: width*0.9,
+        height: width,
+      },
+});

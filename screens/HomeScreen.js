@@ -1,8 +1,7 @@
-import { View, Text, StyleSheet, SafeAreaView, TouchableHighlight } from 'react-native';
+import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, TouchableHighlight } from 'react-native';
 import React from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { removeItem } from '../utils/async_storage';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 
 export default function HomeScreen() {
     const navigation = useNavigation();
