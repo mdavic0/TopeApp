@@ -1,36 +1,50 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { View, Text, StyleSheet, Dimensions, Image, TouchableOpacity } from 'react-native';
 // import Onboarding from '../components/Onboarding/Onboarding';
 import Onboarding from 'react-native-onboarding-swiper';
 import LottieView from 'lottie-react-native';
 import { useNavigation } from '@react-navigation/native';
-import {setItem} from '../utils/async_storage';
+import {setItem, getItem} from '../utils/async_storage';
 const {width, height} = Dimensions.get('window');
+import { OnboardingContext } from '../context/OnboardingContext';
 
 export default function OnboardingScreen() {
     const navigation = useNavigation();
+    const { markOnboardingAsSeen } = useContext(OnboardingContext);  // Usar el contexto
 
     const handleDone = () => {
-        navigation.navigate('Home');
-        setItem('alreadyLaunched', '1');
+        markOnboardingAsSeen();  // Marcar que el Onboarding fue visto
+        navigation.navigate('Home');  // Navegar a la pantalla principal
     }
 
-    const doneButton = ({...props}) => {
-        return (
-            <TouchableOpacity style={styles.doneButton} {...props}>
-                <Text style={{fontSize:16}}>Finalizar</Text>
-            </TouchableOpacity>
-        )
-    }
+    const doneButton = ({ ...props }) => (
+        <TouchableOpacity style={styles.doneButton} {...props}>
+            <Text style={{ fontSize: 16 }}>Finalizar</Text>
+        </TouchableOpacity>
+    );
+
+    const skipButton = ({ ...props }) => (
+        <TouchableOpacity style={styles.doneButton} {...props}>
+            <Text style={{ fontSize: 16 }}>Omitir</Text>
+        </TouchableOpacity>
+    );
+
+    const nextButton = ({ ...props }) => (
+        <TouchableOpacity style={styles.doneButton} {...props}>
+            <Text style={{ fontSize: 16 }}>Siguiente</Text>
+        </TouchableOpacity>
+    );
 
     return (
         <View style={styles.container}>
             <Onboarding
                 containerStyles={{ paddingHorizontal: 15 }}
-                skipLabel={"Omitir"}
-                nextLabel={"Siguiente"}
+                // skipLabel={"Omitir"}
+                // nextLabel={"Siguiente"}
                 bottomBarHighlight={false}
                 DoneButtonComponent={doneButton}
+                SkipButtonComponent={skipButton}
+                NextButtonComponent={nextButton}
                 onDone={handleDone}
                 onSkip={handleDone}
                 pages={[

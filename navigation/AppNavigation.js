@@ -1,54 +1,40 @@
-import React, {useEffect, useState} from "react";
-import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import HomeScreen from "../screens/HomeScreen";
-import OnboardingScreen from "../screens/OnboardingScreen";
-import {getItem, setItem} from "../utils/async_storage";
-const stack = createNativeStackNavigator();
+import React, { useContext } from 'react';
+import { createStackNavigator } from '@react-navigation/stack';
+import { OnboardingContext } from '../context/OnboardingContext';  // Importa el contexto
+import OnboardingScreen from '../screens/OnboardingScreen';
+import HomeScreen from '../screens/HomeScreen';
+import { View, ActivityIndicator } from 'react-native';  // Para el spinner de carga
 
-export default function AppNavigation() {
-const [isFirstLaunch, setIsFirstLaunch] = useState(null);
+const Stack = createStackNavigator();
 
-    useEffect(() => {
-       checkIfFirstLaunch();
-    }, []);
+export default function MainNavigator() {
+    const { hasSeenOnboarding } = useContext(OnboardingContext);
 
-
-    const checkIfFirstLaunch = async () => {
-        const onboarded = await getItem("alreadyLaunched");
-        console.log("YA LOGUEO: ", onboarded);
-        if (onboarded == 1) {
-            setIsFirstLaunch(false);
-        } else {
-            setIsFirstLaunch(true);
-        }
-    };
-
-    if (isFirstLaunch === null) {
-        console.log("isFirstLaunch is null");
-        return null;
-    }
-
-    if (isFirstLaunch) {
+    // Mostrar un spinner mientras se carga el estado de AsyncStorage
+    if (hasSeenOnboarding === null) {
+        console.log('Cargando estado de Onboarding... ( TODAVIA ES NULL)');
         return (
-            console.log("isFirstLaunch is true"),
-            <NavigationContainer>
-                <stack.Navigator initialRoute = "Onboarding">
-                    <stack.Screen name="Onboarding" options= {{headerShown: false}} component={OnboardingScreen} />
-                    <stack.Screen name="Home" options= {{headerShown: false}} component={HomeScreen} />
-                </stack.Navigator>
-            </NavigationContainer>
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                <ActivityIndicator size="large" color="red" />
+            </View>
         );
     } else {
-        return(
-        // console.log("isFirstLaunch is false");
-        <NavigationContainer>
-            <stack.Navigator initialRoute = "Home">
-                <stack.Screen name="Onboarding" options= {{headerShown: false}} component={OnboardingScreen} />
-                <stack.Screen name="Home" options= {{headerShown: false}} component={HomeScreen} />
-            </stack.Navigator>
-        </NavigationContainer>
-        )
+        console.log('hasSeenOnboarding:', hasSeenOnboarding);
     }
 
-    }
+    return (
+        <>
+            {hasSeenOnboarding? (
+                <Stack.Navigator initialRouteName="Home">
+                    <Stack.Screen name="Onboarding" options= {{headerShown: false}} component={OnboardingScreen} />
+                    <Stack.Screen name="Home" options= {{headerShown: false}} component={HomeScreen} />
+                </Stack.Navigator>
+            ) : (
+                <Stack.Navigator initialRouteName="Onboarding">
+                <Stack.Screen name="Onboarding" options= {{headerShown: false}} component={OnboardingScreen} />
+                <Stack.Screen name="Home" options= {{headerShown: false}} component={HomeScreen} />
+            </Stack.Navigator>
+            )}
+        </>        
+    );
+}
